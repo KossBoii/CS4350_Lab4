@@ -1,5 +1,5 @@
 # CS4350_Lab4
-#**Pomona Transit System**
+## **Pomona Transit System**
 SQL Tables:
 **Trip** (<u>TripNumber</u>, StartLocationName, DestinationName)
 **TripOffering** (<u>Trip Number, Date, ScheduledStartTime</u>, ScheduledArrivalTime, DriverName, BusID)
