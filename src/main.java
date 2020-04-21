@@ -1,8 +1,10 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
+import java.sql.*;
 
 
 public class main {
@@ -42,10 +44,10 @@ public class main {
 				addDriver();
 				break;
 			case 8:
-				
+				addBus();
 				break;
 			case 9:
-				
+				deleteBus();
 				break;
 			case 10:
 				
@@ -103,31 +105,88 @@ public class main {
 		dPhone = in.next();
 		
 		String sqlCmd = "INSERT INTO Driver VALUES(\'" + dName + "\',\'" + dPhone + "\');";
-		execute(sqlCmd);
+		try {
+			execute(sqlCmd);
+			System.out.println("Added successfully!");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Check mysql Manual for syntax");
+			e.printStackTrace();
+		}
 	}
 	
 	private static void addBus() {
+		int busID;
+		String busModel;
+		String year;
 		
+		System.out.println("BusID: ");
+		busID = in.nextInt();
+		
+		System.out.println("Bus Model: ");
+		busModel = in.next();
+		
+		System.out.println("Year: ");
+		year = in.next();
+		
+		String sqlCmd = "INSERT INTO Bus VALUES(" + Integer.toString(busID) + ",\'" + busModel + "\',\'" + year + "\');";
+		
+		try {
+			execute(sqlCmd);
+			System.out.println("Added successfully");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Check mysql Manual for syntax");
+			e.printStackTrace();
+		}
 	}
 	
 	private static void deleteBus() {
+		int busID;
 		
-	}
-	
-	private static void execute(String sqlCmd) {
+		System.out.println("BusID to be deleted: ");
+		busID = in.nextInt();
+		
+		String sqlCmd = "DELETE FROM Bus WHERE BusID = " + Integer.toString(busID) + ";";
+		
+		
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost/CS4350_Lab4?" + "user=" + userName + "&password=" + password);
+			int result = execute(sqlCmd);
+			if(result == 0) {
+				System.out.println("There is no bus with ID = " + busID + "to delete");
+			}
+			else {
+				System.out.println("Deleted successfully!");
+			}
 			
-			Statement stmt = con.createStatement();
-			stmt.executeUpdate(sqlCmd);
-			stmt.close();
-			con.close();
-		}
-		catch(Exception e) {
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Check mysql Manual for syntax");
 			e.printStackTrace();
 		}
-		
+	}
+	
+	private static int execute(String sqlCmd) throws SQLException {
+		try {
+			try {
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				Connection con = DriverManager.getConnection("jdbc:mysql://localhost/CS4350_Lab4?" + "user=" + userName + "&password=" + password);
+				
+				Statement stmt = con.createStatement();
+				int result = stmt.executeUpdate(sqlCmd);
+				stmt.close();
+				con.close();
+				return result;
+			}catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+			return -1;	// error
+		}
+		return -1;		// error
 	}
 	
 }
