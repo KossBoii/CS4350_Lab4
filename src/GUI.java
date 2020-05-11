@@ -21,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -104,6 +105,7 @@ public class GUI {
 		// TODO Auto-generated method stub
 		f.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
 		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		f.setLocationRelativeTo(null);
 		f.setResizable(false);
 
 		createComponent();
@@ -128,7 +130,7 @@ public class GUI {
 									removeTripOffering();
 									break;
 								case 3:			// add trip offering
-									addTripOffering();
+
 									break;
 								case 4:			// change driver in trip offering
 									changeDriver();
@@ -161,6 +163,7 @@ public class GUI {
 
 									break;
 								}
+								cmdChosen = false;
 							}
 						}
 						else if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
@@ -188,10 +191,10 @@ public class GUI {
 		f.setVisible(true);
 	}
 
-	public static void createComponent() {
-		menuPanel.setBackground(Color.RED);
-		inputPanel.setBackground(Color.GREEN);
-		resultPanel.setBackground(Color.BLUE);
+	public static void createComponent() { 
+		menuPanel.setBackground(Color.GRAY);
+		inputPanel.setBackground(new Color(170, 183, 184));
+		resultPanel.setBackground(new Color(46, 64, 83));
 
 		menuPanel.setLayout(null);
 		inputPanel.setLayout(null);
@@ -689,6 +692,10 @@ public class GUI {
 				cmdChosen = true;
 				task=3;
 
+				JOptionPane.showMessageDialog(null, "Start to fill in the table below the data.\n"
+						+ "When finish, click Add Button at the end to insert value into database!",
+						"Add Instruction", JOptionPane.INFORMATION_MESSAGE);
+				
 				setActiveTable("TripOffering");
 				model.setRowCount(5);
 				reset();
@@ -824,8 +831,12 @@ public class GUI {
 				setActiveTable("ActualTripStopInfo");
 				reset();
 				showActStopInfo();
-				
 				insertBtn.setVisible(true);
+				
+				JOptionPane.showMessageDialog(null, "Start to fill input box below.\n"
+						+ "When finish, click Enter. Table below will show the instance matched with given data.\n"
+						+ "Complete all cell of that row and click INSERT Button to add it to the database. ",
+						"Insert Instruction", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 
@@ -874,7 +885,13 @@ public class GUI {
 								  		+ numPassOut + ");";
 					
 					try {
-						executeUpdate(query);
+						int check = executeUpdate(query);
+						
+						if(check != -1) {
+							JOptionPane.showMessageDialog(null, "Inserted Successfully", 
+									"SQL Query Status", JOptionPane.PLAIN_MESSAGE);
+							System.out.println("Inserted successfully!");
+						}
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -890,9 +907,10 @@ public class GUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
+				int countInsertedVals = 0;
 				Vector<Vector> tableData = model.getDataVector();
 				int colCount = tableData.elementAt(0).size();
-
+				
 				String sqlCmd = "INSERT INTO TripOffering VALUES ";
 
 				for(int i=0; i<tableData.size(); i++) {
@@ -925,12 +943,19 @@ public class GUI {
 
 					if(isValid) {
 						sqlCmd += inputVals;
+						countInsertedVals ++;
 					}
 				}
 				sqlCmd += ";";
 
 				try {
-					executeUpdate(sqlCmd);
+					int check = executeUpdate(sqlCmd);
+					
+					if(check != -1) {
+						JOptionPane.showMessageDialog(null, "Added successfully " + countInsertedVals + "rows into the database!", 
+								"SQL Query Status", JOptionPane.PLAIN_MESSAGE);
+						System.out.println("Added successfully!");
+					}
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -974,7 +999,19 @@ public class GUI {
 					tripNum + " AND " + "Date='" + tripDate + 
 					"' AND ScheduledStartTime='" + scheduledStartTime+"';";
 			try {
-				executeUpdate(sqlCmd);
+				int check = executeUpdate(sqlCmd);
+				if(check == 0) {
+					JOptionPane.showMessageDialog(null, "There is no TripOffering with given data to delete!\nPlease make sure this TripOffering exists.", 
+							"SQL Query Status", JOptionPane.ERROR_MESSAGE);
+					
+					System.out.println("There is no TripOffering with given data to delete! Please make sure this TripOffering exists.");
+				}
+				else if(check != -1){
+					JOptionPane.showMessageDialog(null, "Deleted TripOffering with given data successfully", 
+							"SQL Query Status", JOptionPane.PLAIN_MESSAGE);
+					System.out.println("Deleted successfully!");
+				}
+				
 			} catch (SQLException ex) {
 				// TODO Auto-generated catch block
 				System.out.println("Check mysql Manual for syntax");
@@ -985,10 +1022,6 @@ public class GUI {
 		return 0;
 	}
 
-	private static int addTripOffering() {
-		return 0;
-	}
-
 	private static int addDriver() {
 		String name = dNametf.getText();
 		String phone = dPhonetf.getText();
@@ -996,8 +1029,13 @@ public class GUI {
 		if(!name.isEmpty() && !phone.isEmpty()) {
 			String sqlCmd = "INSERT INTO Driver VALUES(\'" + name + "\',\'" + phone + "\');";		
 			try {
-				executeUpdate(sqlCmd);
-				System.out.println("Added successfully!");
+				int check = executeUpdate(sqlCmd);
+				
+				if(check != -1) {
+					JOptionPane.showMessageDialog(null, "Added Driver Successfully", 
+							"SQL Query Status", JOptionPane.PLAIN_MESSAGE);
+					System.out.println("Added successfully!");
+				}
 			} catch (SQLException ex) {
 				// TODO Auto-generated catch block
 				System.out.println("Check mysql Manual for syntax");
@@ -1016,8 +1054,13 @@ public class GUI {
 		if(!busID.isEmpty() && !busModel.isEmpty() && !busYear.isEmpty()) {
 			String sqlCmd = "INSERT INTO Bus VALUES(" + busID + ",\'" + busModel + "\',\'" + busYear + "\');";		
 			try {
-				executeUpdate(sqlCmd);
-				System.out.println("Added successfully!");
+				int check = executeUpdate(sqlCmd);
+
+				if(check != -1) {
+					JOptionPane.showMessageDialog(null, "Added Bus Successfully", 
+							"SQL Query Status", JOptionPane.PLAIN_MESSAGE);
+					System.out.println("Added successfully!");
+				}
 			} catch (SQLException ex) {
 				// TODO Auto-generated catch block
 				System.out.println("Check mysql Manual for syntax");
@@ -1034,9 +1077,14 @@ public class GUI {
 			String sqlCmd = "DELETE FROM Bus WHERE BusID = " + busID + ";";
 			int result = executeUpdate(sqlCmd);
 			if(result == 0) {
-				System.out.println("There is no bus with ID = " + busID + "to delete");
+				JOptionPane.showMessageDialog(null, "There is no bus with ID = " + busID + " to delete", 
+						"SQL Query Status", JOptionPane.ERROR_MESSAGE);
+				
+				System.out.println("There is no bus with ID = " + busID + " to delete");
 			}
-			else {
+			else if(result != -1){
+				JOptionPane.showMessageDialog(null, "Deleted Bus with ID = " + busID + " successfully", 
+						"SQL Query Status", JOptionPane.PLAIN_MESSAGE);
 				System.out.println("Deleted successfully!");
 			}
 
@@ -1062,7 +1110,17 @@ public class GUI {
 					+ " AND Date='" + tripDate
 					+ "' AND ScheduledStartTime='" + scheduledStartTime + "';";
 			try {
-				executeUpdate(query);
+				int check = executeUpdate(query);
+				
+				if(check == 0) {
+					JOptionPane.showMessageDialog(null, "Can't update Driver with given data.\nPlease make sure this trip offering exists", 
+							"SQL Query Status", JOptionPane.ERROR_MESSAGE);
+				}
+				else if(check != -1) {
+					JOptionPane.showMessageDialog(null, "Update successfully! " + check + " rows in database changed.", 
+							"SQL Query Status", JOptionPane.PLAIN_MESSAGE);
+				}
+				
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1086,7 +1144,16 @@ public class GUI {
 					+ " AND Date='" + tripDate
 					+ "' AND ScheduledStartTime='" + scheduledStartTime + "';";
 			try {
-				executeUpdate(query);
+				int check = executeUpdate(query);
+				
+				if(check == 0) {
+					JOptionPane.showMessageDialog(null, "Can't update Bus with given data.\nPlease make sure this trip offering exists", 
+							"SQL Query Status", JOptionPane.ERROR_MESSAGE);
+				}
+				else if(check != -1) {
+					JOptionPane.showMessageDialog(null, "Update successfully! " + check + " rows in database changed.", 
+							"SQL Query Status", JOptionPane.PLAIN_MESSAGE);
+				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1229,6 +1296,8 @@ public class GUI {
 			return 0;
 		}
 		else {
+//			JOptionPane.showMessageDialog(parentComponent, message, title, messageType, icon);
+			
 			return -1;
 		}
 	}
@@ -1279,6 +1348,7 @@ public class GUI {
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Query Error", JOptionPane.ERROR_MESSAGE);
 			return -1;	// error
 		}
 		return -1;		// error
