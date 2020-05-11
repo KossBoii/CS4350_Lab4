@@ -149,7 +149,6 @@ public class main {
 		
 		String sqlCmd = "DELETE FROM Bus WHERE BusID = " + Integer.toString(busID) + ";";
 		
-		
 		try {
 			int result = execute(sqlCmd);
 			if(result == 0) {
@@ -170,7 +169,8 @@ public class main {
 		try {
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
-				Connection con = DriverManager.getConnection("jdbc:mysql://localhost/CS4350_Lab4?" + "user=" + userName + "&password=" + password);
+				Connection con = DriverManager.getConnection("jdbc:mysql://localhost/CS4350_Lab4?" 
+				+ "user=" + userName + "&password=" + password);
 				
 				Statement stmt = con.createStatement();
 				int result = stmt.executeUpdate(sqlCmd);
