@@ -36,7 +36,7 @@ import com.mysql.cj.jdbc.result.ResultSetMetaData;
 	Author: Long Truong (Tony)
 	CS 4350 - Database Systems
 	Dr. Salam Salloum 
-*/
+ */
 
 
 public class GUI {
@@ -331,7 +331,7 @@ public class GUI {
 		insertBtn = new JButton("Insert");
 		insertBtn.setFont(new Font("Serif", Font.BOLD, 14));
 		insertBtn.setBounds(SCREEN_WIDTH - 100, RESULT_PANEL_HEIGHT - 40, 100, 40);
-		
+
 
 		sPane = new JScrollPane(resultTable);
 		sPane.setBounds(0, 0, SCREEN_WIDTH, RESULT_PANEL_HEIGHT - 40);
@@ -378,7 +378,7 @@ public class GUI {
 	public static void showBusInput() {
 		busIDLabel.setBounds(50, 10, 60, 40);
 		busIDtf.setBounds(140, 10, 150, 40);
-		
+
 		busIDLabel.setVisible(true);
 		busModelLabel.setVisible(true);
 		busYearLabel.setVisible(true);
@@ -425,7 +425,7 @@ public class GUI {
 	public static void showDriverInput() {
 		dNameLabel.setBounds(50, 10, 120, 40);
 		dNametf.setBounds(180, 10, 150, 40);
-		
+
 		dNameLabel.setVisible(true);
 		dNametf.setVisible(true);
 
@@ -573,20 +573,20 @@ public class GUI {
 		dNametf.setBounds(280, 10, 150, 40);
 		tripDateLabel.setBounds(50, 60, 200, 40);
 		tripDatetf.setBounds(280, 60, 150, 40);
-		
+
 		dNameLabel.setVisible(true);
 		dNametf.setVisible(true);
 		tripDateLabel.setVisible(true);
 		tripDatetf.setVisible(true);
 	}
-	
+
 	public static void unshowDisplayWeekly() {
 		dNameLabel.setVisible(false);
 		dNametf.setVisible(false);
 		tripDateLabel.setVisible(false);
 		tripDatetf.setVisible(false);
 	}
-	
+
 	public static void showActStopInfo() {
 		tripNumLabel.setBounds(50, 10, 200, 40);
 		tripNumtf.setBounds(280, 10, 150, 40);
@@ -631,7 +631,7 @@ public class GUI {
 		};
 		model.setRowCount(0);
 		colLock.clear();
-		
+
 		unshowBusInput();
 		unshowDriverInput();
 		unshowTripInput();
@@ -644,7 +644,7 @@ public class GUI {
 		insertBtn.setVisible(false);
 		dNameLabel.setText("Driver Name: ");
 		busIDLabel.setText("BusID: ");
-		
+
 		// clear all values inside JTextFields
 		busIDtf.setText("");
 		busModeltf.setText("");
@@ -703,7 +703,7 @@ public class GUI {
 				JOptionPane.showMessageDialog(null, "Start to fill in the table below the data.\n"
 						+ "When finish, click Add Button at the end to insert value into database!",
 						"Add Instruction", JOptionPane.INFORMATION_MESSAGE);
-				
+
 				setActiveTable("TripOffering");
 				model.setRowCount(5);
 				reset();
@@ -728,7 +728,7 @@ public class GUI {
 				dNameLabel.setText("New Driver Name: ");
 				dNameLabel.setBounds(50, 160, 200, 40);
 				dNametf.setBounds(280, 160, 150, 40);
-				
+
 				dNameLabel.setVisible(true);
 				dNametf.setVisible(true);
 			}
@@ -746,11 +746,11 @@ public class GUI {
 				setActiveTable("TripOffering");
 				reset();
 				showTripOffInput();
-				
+
 				busIDLabel.setText("New BusID: ");
 				busIDLabel.setBounds(50, 160, 200, 40);
 				busIDtf.setBounds(280, 160, 150, 40);
-				
+
 				busIDLabel.setVisible(true);
 				busIDtf.setVisible(true);
 			}
@@ -769,9 +769,9 @@ public class GUI {
 				showStopInfoInput();
 			}
 		});
-		
+
 		btns[6].addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
@@ -792,6 +792,8 @@ public class GUI {
 				System.out.println("Add a driver");
 				cmdChosen = true;
 				task = 8;
+				
+				setActiveTable("Driver");
 				reset();
 				showDriverInput();
 			}
@@ -804,6 +806,8 @@ public class GUI {
 				System.out.println("Add a bus");
 				cmdChosen = true;
 				task = 9;
+				
+				setActiveTable("Bus");
 				reset();
 				showBusInput();
 			}
@@ -840,7 +844,7 @@ public class GUI {
 				reset();
 				showActStopInfo();
 				insertBtn.setVisible(true);
-				
+
 				JOptionPane.showMessageDialog(null, "Start to fill input box below.\n"
 						+ "When finish, click Enter. Table below will show the instance matched with given data.\n"
 						+ "Complete all cell of that row and click INSERT Button to add it to the database. ",
@@ -860,9 +864,9 @@ public class GUI {
 				reset();
 			}
 		});
-		
+
 		insertBtn.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
@@ -875,26 +879,26 @@ public class GUI {
 				String actualArrTime = (String) resultTable.getModel().getValueAt(0, 6);
 				String numPassIn = (String) resultTable.getModel().getValueAt(0, 7);
 				String numPassOut = (String) resultTable.getModel().getValueAt(0, 8);
-				
+
 				if(stopNum.isEmpty() || scheduledArrTime.isEmpty() || actualStartTime.isEmpty()  || 
 						actualArrTime.isEmpty()  || numPassIn.isEmpty() || numPassOut.isEmpty()) {
-					
+
 				}
 				else {
 					String query = "INSERT INTO ActualTripStopInfo values "
 							+ "(" + tripNum + " , '"
-								  		+ date + "' , "
-								  		+ "TIME('" + scheduledStartTime + "') , "
-								  		+ stopNum + " , "
-								  		+ "TIME('" + scheduledArrTime + "') , "
-								  		+ "TIME('" + actualStartTime + "') , "
-								  		+ "TIME('" + actualArrTime + "') , "
-								  		+ numPassIn + " , "
-								  		+ numPassOut + ");";
-					
+							+ date + "' , "
+							+ "TIME('" + scheduledStartTime + "') , "
+							+ stopNum + " , "
+							+ "TIME('" + scheduledArrTime + "') , "
+							+ "TIME('" + actualStartTime + "') , "
+							+ "TIME('" + actualArrTime + "') , "
+							+ numPassIn + " , "
+							+ numPassOut + ");";
+
 					try {
 						int check = executeUpdate(query);
-						
+
 						if(check != -1) {
 							JOptionPane.showMessageDialog(null, "Inserted Successfully", 
 									"SQL Query Status", JOptionPane.PLAIN_MESSAGE);
@@ -905,23 +909,22 @@ public class GUI {
 						e1.printStackTrace();
 					}
 				}
-				
+
 				colLock.clear();
 			}
 		});
-		
+
 
 		addBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				int countInsertedVals = 0;
-				Vector<Vector> tableData = model.getDataVector();
-				int colCount = tableData.elementAt(0).size();
+				int colCount = resultTable.getModel().getColumnCount();
 				
 				String sqlCmd = "INSERT INTO TripOffering VALUES ";
 
-				for(int i=0; i<tableData.size(); i++) {
+				for(int i=0; i<5; i++) {
 					boolean isValid = true;
 					String inputVals = "";
 
@@ -932,21 +935,22 @@ public class GUI {
 						inputVals = "(";
 
 					for(int j=0; j<colCount; j++) {
-						if(tableData.elementAt(i).elementAt(j) == null) {
+						if(resultTable.getValueAt(i, j) == null) {
 							// there is no value in cell(i,j)
 							isValid = false;
 							break;
 						}
 						else {
 							if(j != 0 && j !=colCount-1)
-								inputVals += "'" + tableData.elementAt(i).elementAt(j) + "'";
+								inputVals += "'" + resultTable.getValueAt(i, j) + "'";
 							else
-								inputVals += tableData.elementAt(i).elementAt(j);
+								inputVals += resultTable.getValueAt(i, j);
 							if(j != colCount - 1) {
 								inputVals += ", ";
 							}
 						}
 					}
+					
 					inputVals += ")";
 
 					if(isValid) {
@@ -954,11 +958,12 @@ public class GUI {
 						countInsertedVals ++;
 					}
 				}
+				
 				sqlCmd += ";";
 
 				try {
 					int check = executeUpdate(sqlCmd);
-					
+
 					if(check != -1) {
 						JOptionPane.showMessageDialog(null, "Added successfully " + countInsertedVals + "rows into the database!", 
 								"SQL Query Status", JOptionPane.PLAIN_MESSAGE);
@@ -1011,7 +1016,7 @@ public class GUI {
 				if(check == 0) {
 					JOptionPane.showMessageDialog(null, "There is no TripOffering with given data to delete!\nPlease make sure this TripOffering exists.", 
 							"SQL Query Status", JOptionPane.ERROR_MESSAGE);
-					
+
 					System.out.println("There is no TripOffering with given data to delete! Please make sure this TripOffering exists.");
 				}
 				else if(check != -1){
@@ -1019,7 +1024,7 @@ public class GUI {
 							"SQL Query Status", JOptionPane.PLAIN_MESSAGE);
 					System.out.println("Deleted successfully!");
 				}
-				
+
 			} catch (SQLException ex) {
 				// TODO Auto-generated catch block
 				System.out.println("Check mysql Manual for syntax");
@@ -1038,7 +1043,7 @@ public class GUI {
 			String sqlCmd = "INSERT INTO Driver VALUES(\'" + name + "\',\'" + phone + "\');";		
 			try {
 				int check = executeUpdate(sqlCmd);
-				
+
 				if(check != -1) {
 					JOptionPane.showMessageDialog(null, "Added Driver Successfully", 
 							"SQL Query Status", JOptionPane.PLAIN_MESSAGE);
@@ -1087,7 +1092,7 @@ public class GUI {
 			if(result == 0) {
 				JOptionPane.showMessageDialog(null, "There is no bus with ID = " + busID + " to delete", 
 						"SQL Query Status", JOptionPane.ERROR_MESSAGE);
-				
+
 				System.out.println("There is no bus with ID = " + busID + " to delete");
 			}
 			else if(result != -1){
@@ -1110,7 +1115,7 @@ public class GUI {
 		String tripDate = tripDatetf.getText();
 		String scheduledStartTime = schedStartTimetf.getText();
 		String dName = dNametf.getText();
-		
+
 		if(!tripNum.isEmpty() && !tripDate.isEmpty() && !scheduledStartTime.isEmpty() && !dName.isEmpty()) {			
 			String query = "UPDATE TripOffering"
 					+ " SET DriverName= '" + dName
@@ -1119,7 +1124,7 @@ public class GUI {
 					+ "' AND ScheduledStartTime='" + scheduledStartTime + "';";
 			try {
 				int check = executeUpdate(query);
-				
+
 				if(check == 0) {
 					JOptionPane.showMessageDialog(null, "Can't update Driver with given data.\nPlease make sure this trip offering exists", 
 							"SQL Query Status", JOptionPane.ERROR_MESSAGE);
@@ -1128,7 +1133,7 @@ public class GUI {
 					JOptionPane.showMessageDialog(null, "Update successfully! " + check + " rows in database changed.", 
 							"SQL Query Status", JOptionPane.PLAIN_MESSAGE);
 				}
-				
+
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1144,7 +1149,7 @@ public class GUI {
 		String tripDate = tripDatetf.getText();
 		String scheduledStartTime = schedStartTimetf.getText();
 		String busID = busIDtf.getText();
-		
+
 		if(!tripNum.isEmpty() && !tripDate.isEmpty() && !scheduledStartTime.isEmpty() && !busID.isEmpty()) {			
 			String query = "UPDATE TripOffering"
 					+ " SET BUSID= '" + busID
@@ -1153,7 +1158,7 @@ public class GUI {
 					+ "' AND ScheduledStartTime='" + scheduledStartTime + "';";
 			try {
 				int check = executeUpdate(query);
-				
+
 				if(check == 0) {
 					JOptionPane.showMessageDialog(null, "Can't update Bus with given data.\nPlease make sure this trip offering exists", 
 							"SQL Query Status", JOptionPane.ERROR_MESSAGE);
@@ -1168,10 +1173,10 @@ public class GUI {
 				return -1;
 			}	
 		}
-		
+
 		return 0;
 	}
-	
+
 	private static int displayBusStops(){
 		String tripNum = tripNumtf.getText();
 
@@ -1189,35 +1194,35 @@ public class GUI {
 		}
 		return 0;
 	}
-	
+
 	private static String getNextDate(String curDate) {
 		String result="";
-		
+
 		try {
 			Calendar today = Calendar.getInstance();
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = format.parse(curDate);
-            today.setTime(date);
-            today.add(Calendar.DAY_OF_YEAR, 1);
-            result = format.format(today.getTime());
+			DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = format.parse(curDate);
+			today.setTime(date);
+			today.add(Calendar.DAY_OF_YEAR, 1);
+			result = format.format(today.getTime());
 		} catch (Exception e) {
 			return result;
 		}
 		return result;
 	}
-	
+
 	private static int displayWeeklySchedule(){
 		String dName = dNametf.getText();
 		String startDate = tripDatetf.getText();
-		
-		
+
+
 		if(!dName.isEmpty() && !startDate.isEmpty()) {
 			String sequences = "'" + startDate + "' , ";
 			String curDate = startDate;
 			int i=1;
 			while(i < 7) {
 				String nextDate = getNextDate(curDate);
-				
+
 				sequences += "'" + nextDate + "'";
 				if(i != 6) {
 					sequences += " , ";
@@ -1225,10 +1230,10 @@ public class GUI {
 				i++;
 				curDate = nextDate;
 			}
-			
+
 			System.out.println("Sequences: " + sequences);
-			
-			
+
+
 			String query = "SELECT *"
 					+ " FROM TripOffering"
 					+ " WHERE DriverName='" + dName
@@ -1243,7 +1248,7 @@ public class GUI {
 		}
 		return 0;
 	}
-	
+
 	private static int insertActualData() {
 		String tripNum = tripNumtf.getText();
 		String tripDate = tripDatetf.getText();
@@ -1257,8 +1262,8 @@ public class GUI {
 						+ " AND T1.TripNumber = T2.TripNumber "
 						+ " AND T1.Date LIKE '" + tripDate + "'"
 						+ " AND T1.ScheduledStartTime LIKE '" + startTime + "'";
-				
-				
+
+
 				Class.forName("com.mysql.cj.jdbc.Driver");
 				Connection con = DriverManager.getConnection("jdbc:mysql://localhost/CS4350_Lab4?" 
 						+ "useLegacyDatetimeCode=false&serverTimezone=America/Los_Angeles&" + "user=" + userName + "&password=" + password);
@@ -1289,11 +1294,11 @@ public class GUI {
 				model.setRowCount(0);
 				model.insertRow(0, new Object[] {tripNum, tripDate, startTime, stopNum, arrivalTime, "", "", "", ""});
 
-				
+
 				colLock.add(0);
 				colLock.add(1);
 				colLock.add(2);
-				
+
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1304,8 +1309,8 @@ public class GUI {
 			return 0;
 		}
 		else {
-//			JOptionPane.showMessageDialog(parentComponent, message, title, messageType, icon);
-			
+			//			JOptionPane.showMessageDialog(parentComponent, message, title, messageType, icon);
+
 			return -1;
 		}
 	}
