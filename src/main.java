@@ -6,6 +6,12 @@ import java.sql.Statement;
 import java.util.Scanner;
 import java.sql.*;
 
+/*
+	Project Name: Pomona Transit System
+	Author: Long Truong (Tony)
+	CS 4350 - Database Systems
+	Dr. Salam Salloum 
+*/
 
 public class main {
 	public static Scanner in = new Scanner(System.in);

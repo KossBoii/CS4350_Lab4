@@ -31,6 +31,14 @@ import javax.swing.text.DateFormatter;
 
 import com.mysql.cj.jdbc.result.ResultSetMetaData;
 
+/*
+	Project Name: Pomona Transit System
+	Author: Long Truong (Tony)
+	CS 4350 - Database Systems
+	Dr. Salam Salloum 
+*/
+
+
 public class GUI {
 
 	private static final String userName = "root";
